@@ -1,4 +1,5 @@
-# Physics-Constrained Adaptive Domain Weighting with Random Forest
+# Domain-Adaptive Machine Learning for Accurate Cure Degree Prediction in Additive Manufacturing with Imbalanced Data
+
 
 This repository accompanies our research paper on applying domain-specific constraints and adaptive weighting to improve classification performance on imbalanced, physics-governed datasets.
 
@@ -8,7 +9,7 @@ This repository accompanies our research paper on applying domain-specific const
 
 ## 🧠 Model
 
-- `src/model.py`: Implementation of the `PhysicsConstrainedADWB_RF` classifier.
+- `src/model.py`: Implementation of the `PhysicsConstrainedADWB_RF` classifier. A custom random forest classifier that oversamples based on physically valid process constraints and optimal parameter regions.
 - `src/utils.py`: Helper functions including a safe SMOTE wrapper.
 - `src/train.py`: Full training pipeline, comparing baseline Random Forest, SMOTE-RF, and our proposed model.
 
@@ -21,3 +22,14 @@ This repository accompanies our research paper on applying domain-specific const
 Install dependencies:
 ```bash
 pip install -r requirements.txt
+
+To train and evaluate all models:
+
+python src/train.py
+
+## 📚 Citation
+If you use this work, please cite our upcoming research paper (DOI or citation to be added after publication).
+
+## 📄 License
+This project is licensed under the MIT License.
+Feel free to use, modify, and distribute with attribution.
