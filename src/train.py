@@ -1,11 +1,13 @@
 import pandas as pd
 import numpy as np
+from collections import Counter
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 
 from model import PhysicsConstrainedADWB_RF
 from utils import apply_safe_smote
+from physics_gan import PhysicsGAN
 
 process_constraints = {
     'Low': {
@@ -53,9 +55,16 @@ X_smote, y_smote = apply_safe_smote(X_train, y_train)
 smote_rf = RandomForestClassifier(n_estimators=200)
 smote_rf.fit(X_smote, y_smote)
 
+print("\nApplying PhysicsGAN and training GAN-RF...")
+gan = PhysicsGAN(process_constraints)
+X_gan, y_gan = gan.augment(X_train.values, y_train.values)
+gan_rf = RandomForestClassifier(n_estimators=200)
+gan_rf.fit(X_gan, y_gan)
+
 print("\nClass distributions:")
 print("Original:", Counter(y_train))
 print("After SMOTE:", Counter(y_smote))
+print("After PhysicsGAN:", Counter(y_gan))
 
 print("\nADWB-RF Performance:")
 y_pred_adwb = adwb_rf.predict(X_test)
@@ -71,3 +80,8 @@ print("\nSMOTE-RF Performance:")
 y_pred_smote = smote_rf.predict(X_test)
 print(classification_report(y_test, y_pred_smote))
 print(confusion_matrix(y_test, y_pred_smote))
+
+print("\nPhysicsGAN-RF Performance:")
+y_pred_gan = gan_rf.predict(X_test)
+print(classification_report(y_test, y_pred_gan))
+print(confusion_matrix(y_test, y_pred_gan))
