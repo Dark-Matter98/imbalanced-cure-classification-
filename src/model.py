@@ -1,8 +1,9 @@
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
+from sklearn.base import BaseEstimator, ClassifierMixin
 
-class PhysicsConstrainedADWB_RF:
+class PhysicsConstrainedADWB_RF(BaseEstimator, ClassifierMixin):
     def __init__(self, domain_weights, process_constraints, n_estimators=200, k=1.5, random_state=42):
         self.domain_weights = domain_weights
         self.process_constraints = process_constraints
