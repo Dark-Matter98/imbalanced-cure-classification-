@@ -1,6 +1,11 @@
 import pandas as pd
 import numpy as np
+from collections import Counter
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 
@@ -53,6 +58,20 @@ X_smote, y_smote = apply_safe_smote(X_train, y_train)
 smote_rf = RandomForestClassifier(n_estimators=200)
 smote_rf.fit(X_smote, y_smote)
 
+print("\nTraining Logistic Regression...")
+lr_pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("clf", LogisticRegression(class_weight="balanced", max_iter=1000, random_state=42)),
+])
+lr_pipeline.fit(X_train, y_train)
+
+print("\nTraining Support Vector Machine...")
+svc_pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("clf", SVC(class_weight="balanced", random_state=42)),
+])
+svc_pipeline.fit(X_train, y_train)
+
 print("\nClass distributions:")
 print("Original:", Counter(y_train))
 print("After SMOTE:", Counter(y_smote))
@@ -71,3 +90,13 @@ print("\nSMOTE-RF Performance:")
 y_pred_smote = smote_rf.predict(X_test)
 print(classification_report(y_test, y_pred_smote))
 print(confusion_matrix(y_test, y_pred_smote))
+
+print("\nLogistic Regression Performance:")
+y_pred_lr = lr_pipeline.predict(X_test)
+print(classification_report(y_test, y_pred_lr))
+print(confusion_matrix(y_test, y_pred_lr))
+
+print("\nSupport Vector Machine Performance:")
+y_pred_svc = svc_pipeline.predict(X_test)
+print(classification_report(y_test, y_pred_svc))
+print(confusion_matrix(y_test, y_pred_svc))
